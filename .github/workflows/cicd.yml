@@ -7,11 +7,10 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
 
-  services:
+    services:
       postgres:
         image: postgres:14.10
         env:
