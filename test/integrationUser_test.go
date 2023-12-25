@@ -1,178 +1,181 @@
 package test
 
-// import (
-// 	"context"
-// 	"log"
-// 	"os"
-// 	"testing"
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+	"testing"
 
-// 	"github.com/akshay0074700747/proto-files-for-microservices/pb"
-// 	initializer "github.com/akshay0074700747/user-service/Initializer"
-// 	"github.com/akshay0074700747/user-service/db"
-// 	"github.com/golang/protobuf/ptypes/empty"
-// 	"github.com/joho/godotenv"
-// 	"github.com/stretchr/testify/assert"
-// )
+	"github.com/akshay0074700747/proto-files-for-microservices/pb"
+	initializer "github.com/akshay0074700747/user-service/Initializer"
+	"github.com/akshay0074700747/user-service/db"
+	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/joho/godotenv"
+	"github.com/stretchr/testify/assert"
+)
 
-// func TestAddUserIntegration(t *testing.T) {
+func TestAddUserIntegration(t *testing.T) {
+	fmt.Println("Add user integration called first...")
+	if err := godotenv.Load("../cmd/.env"); err != nil {
+		log.Fatal(err.Error())
+	}
 
-// 	if err := godotenv.Load("../cmd/.env"); err != nil {
-// 		log.Fatal(err.Error())
-// 	}
+	addr := os.Getenv("TEST_DATABASE_ADDR")
 
-// 	addr := os.Getenv("TEST_DATABASE_ADDR")
+	db, err := db.InitDB(addr)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
-// 	db, err := db.InitDB(addr)
-// 	if err != nil {
-// 		log.Fatal(err.Error())
-// 	}
+	usrService := initializer.Initialize(db)
 
-// 	usrService := initializer.Initialize(db)
+	tests := []struct {
+		name      string
+		request   *pb.AddUserRequest
+		wantError bool
+		wantUser  *pb.UserResponce
+	}{
+		{
+			name:      "Success",
+			request:   &pb.AddUserRequest{Name: "Trevor", IsAdmin: false},
+			wantError: false,
+			wantUser:  &pb.UserResponce{Id: 1, Name: "Trevor", IsAdmin: false},
+		},
+		{
+			name:      "Failure",
+			request:   &pb.AddUserRequest{},
+			wantError: true,
+			wantUser:  nil,
+		},
+		{
+			name:      "Success",
+			request:   &pb.AddUserRequest{Name: "Messi", IsAdmin: true},
+			wantError: false,
+			wantUser:  &pb.UserResponce{Id: 2, Name: "Messi", IsAdmin: true},
+		},
+	}
 
-// 	// defer func() {
-// 	// 	db.Exec("drop table users")
-// 	// }()
+	for _, test := range tests {
+		responce, err := usrService.AddUser(context.TODO(), test.request)
+		if test.wantError {
+			assert.Error(t, err)
+			assert.Nil(t, responce)
+		} else {
+			assert.NoError(t, err)
+			assert.NotNil(t, responce)
+			assert.Equal(t, test.wantUser, responce)
+		}
+	}
+}
 
-// 	tests := []struct {
-// 		name      string
-// 		request   *pb.AddUserRequest
-// 		wantError bool
-// 		wantUser  *pb.UserResponce
-// 	}{
-// 		{
-// 			name:      "Success",
-// 			request:   &pb.AddUserRequest{Name: "Trevor", IsAdmin: false},
-// 			wantError: false,
-// 			wantUser:  &pb.UserResponce{Id: 1, Name: "Trevor", IsAdmin: false},
-// 		},
-// 		{
-// 			name:      "Failure",
-// 			request:   &pb.AddUserRequest{},
-// 			wantError: true,
-// 			wantUser:  nil,
-// 		},
-// 		{
-// 			name:      "Success",
-// 			request:   &pb.AddUserRequest{Name: "Messi", IsAdmin: true},
-// 			wantError: false,
-// 			wantUser:  &pb.UserResponce{Id: 2, Name: "Messi", IsAdmin: true},
-// 		},
-// 	}
+func TestGetUserIntegration(t *testing.T) {
+	fmt.Println("Get user integration called second...")
+	if err := godotenv.Load("../cmd/.env"); err != nil {
+		log.Fatal(err.Error())
+	}
 
-// 	for _, test := range tests {
-// 		responce, err := usrService.AddUser(context.TODO(), test.request)
-// 		if test.wantError {
-// 			assert.Error(t, err)
-// 			assert.Nil(t, responce)
-// 		} else {
-// 			assert.NoError(t, err)
-// 			assert.NotNil(t, responce)
-// 			assert.Equal(t, test.wantUser, responce)
-// 		}
-// 	}
-// }
+	addr := os.Getenv("TEST_DATABASE_ADDR")
 
-// func TestGetUserIntegration(t *testing.T) {
+	db, err := db.InitDB(addr)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
-// 	if err := godotenv.Load("../cmd/.env"); err != nil {
-// 		log.Fatal(err.Error())
-// 	}
+	usrService := initializer.Initialize(db)
 
-// 	addr := os.Getenv("TEST_DATABASE_ADDR")
+	tests := []struct {
+		name      string
+		request   *pb.UserRequest
+		wantError bool
+		wantUser  *pb.UserResponce
+	}{
+		{
+			name:      "Success",
+			request:   &pb.UserRequest{Id: 1},
+			wantError: false,
+			wantUser:  &pb.UserResponce{Id: 1, Name: "Trevor", IsAdmin: false},
+		},
+		{
+			name:      "Failure",
+			request:   &pb.UserRequest{Id: 0},
+			wantError: true,
+			wantUser:  nil,
+		},
+		{
+			name:      "Success",
+			request:   &pb.UserRequest{Id: 2},
+			wantError: false,
+			wantUser:  &pb.UserResponce{Id: 2, Name: "Messi", IsAdmin: true},
+		},
+	}
 
-// 	db, err := db.InitDB(addr)
-// 	if err != nil {
-// 		log.Fatal(err.Error())
-// 	}
+	for _, test := range tests {
+		responce, err := usrService.GetUser(context.TODO(), test.request)
+		if test.wantError {
+			assert.Error(t, err)
+			assert.Nil(t, responce)
+		} else {
+			assert.NoError(t, err)
+			assert.NotNil(t, responce)
+			assert.Equal(t, test.wantUser, responce)
+		}
+	}
+}
 
-// 	usrService := initializer.Initialize(db)
+func TestGetAllUsersIntegration(t *testing.T) {
+	fmt.Println("Get all users integration called third...")
+	if err := godotenv.Load("../cmd/.env"); err != nil {
+		log.Fatal(err.Error())
+	}
 
-// 	tests := []struct {
-// 		name      string
-// 		request   *pb.UserRequest
-// 		wantError bool
-// 		wantUser  *pb.UserResponce
-// 	}{
-// 		{
-// 			name:      "Success",
-// 			request:   &pb.UserRequest{Id: 1},
-// 			wantError: false,
-// 			wantUser:  &pb.UserResponce{Id: 1, Name: "Trevor", IsAdmin: false},
-// 		},
-// 		{
-// 			name:      "Failure",
-// 			request:   &pb.UserRequest{Id: 0},
-// 			wantError: true,
-// 			wantUser:  nil,
-// 		},
-// 		{
-// 			name:      "Success",
-// 			request:   &pb.UserRequest{Id: 2},
-// 			wantError: false,
-// 			wantUser:  &pb.UserResponce{Id: 2, Name: "Messi", IsAdmin: true},
-// 		},
-// 	}
+	addr := os.Getenv("TEST_DATABASE_ADDR")
 
-// 	for _, test := range tests {
-// 		responce, err := usrService.GetUser(context.TODO(), test.request)
-// 		if test.wantError {
-// 			assert.Error(t, err)
-// 			assert.Nil(t, responce)
-// 		} else {
-// 			assert.NoError(t, err)
-// 			assert.NotNil(t, responce)
-// 			assert.Equal(t, test.wantUser, responce)
-// 		}
-// 	}
-// }
+	db, err := db.InitDB(addr)
 
-// func TestGetAllUsersIntegration(t *testing.T) {
-// 	if err := godotenv.Load("../cmd/.env"); err != nil {
-// 		log.Fatal(err.Error())
-// 	}
+	defer func() {
+		db.Exec("drop table users")
+	}()
 
-// 	addr := os.Getenv("TEST_DATABASE_ADDR")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
-// 	db, err := db.InitDB(addr)
-// 	if err != nil {
-// 		log.Fatal(err.Error())
-// 	}
+	usrService := initializer.Initialize(db)
 
-// 	usrService := initializer.Initialize(db)
+	tests := []struct {
+		name      string
+		request   *empty.Empty
+		expected  *pb.AllUsersResponce
+		wantError bool
+	}{
+		{
+			name:    "Success",
+			request: &empty.Empty{},
+			expected: &pb.AllUsersResponce{Users: []*pb.UserResponce{
+				{Id: 1, Name: "Trevor", IsAdmin: false},
+				{Id: 2, Name: "Messi", IsAdmin: true},
+			}},
+			wantError: false,
+		},
+		// {
+		// 	name:    "Failure",
+		// 	request: &empty.Empty{},
+		// 	expected:  nil,
+		// 	wantError: true,
+		// },
+	}
 
-// 	tests := []struct {
-// 		name      string
-// 		request   *empty.Empty
-// 		expected  *pb.AllUsersResponce
-// 		wantError bool
-// 	}{
-// 		{
-// 			name:    "Success",
-// 			request: &empty.Empty{},
-// 			expected: &pb.AllUsersResponce{Users: []*pb.UserResponce{
-// 				{Id: 1, Name: "Trevor", IsAdmin: false},
-// 				{Id: 2, Name: "Messi", IsAdmin: true},
-// 			}},
-// 			wantError: false,
-// 		},
-// 		// {
-// 		// 	name:    "Failure",
-// 		// 	request: &empty.Empty{},
-// 		// 	expected:  nil,
-// 		// 	wantError: true,
-// 		// },
-// 	}
+	for _, test := range tests {
 
-// 	for _, test := range tests {
-
-// 		responce, err := usrService.GetAllUsersResponce(context.TODO(), test.request)
-// 		if test.wantError {
-// 			assert.Error(t, err)
-// 			assert.Nil(t, responce)
-// 		} else {
-// 			assert.NoError(t, err)
-// 			assert.NotNil(t, responce)
-// 			assert.Equal(t, test.expected, responce)
-// 		}
-// 	}
-// }
+		responce, err := usrService.GetAllUsersResponce(context.TODO(), test.request)
+		if test.wantError {
+			assert.Error(t, err)
+			assert.Nil(t, responce)
+		} else {
+			assert.NoError(t, err)
+			assert.NotNil(t, responce)
+			assert.Equal(t, test.expected, responce)
+		}
+	}
+}
