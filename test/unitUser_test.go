@@ -2,7 +2,6 @@ package test
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"testing"
 
@@ -15,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAddUser(t *testing.T) {
+func TestSignup(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -24,46 +23,46 @@ func TestAddUser(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		mockFunc  func(user entities.Users) (entities.Users, error)
-		request   *pb.AddUserRequest
+		mockFunc  func(user entities.Clients) (entities.Clients, error)
+		request   *pb.SignupUserRequest
 		wantError bool
 		wantUser  *pb.UserResponce
 	}{
 		{
 			name: "Success",
-			mockFunc: func(user entities.Users) (entities.Users, error) {
-				return entities.Users{Id: 1, Name: user.Name, IsAdmin: user.IsAdmin}, nil
+			mockFunc: func(user entities.Clients) (entities.Clients, error) {
+				return entities.Clients{Id: 1, Name: user.Name, Email: user.Email, Mobile: user.Mobile}, nil
 			},
-			request:   &pb.AddUserRequest{Name: "John", IsAdmin: false},
+			request:   &pb.SignupUserRequest{Name: "John", Email: "john@gmail.com", Mobile: "9435467231", Password: "qw##w23Aw"},
 			wantError: false,
-			wantUser:  &pb.UserResponce{Id: 1, Name: "John", IsAdmin: false},
-		},
-		{
-			name: "Adapter Error",
-			mockFunc: func(user entities.Users) (entities.Users, error) {
-				return entities.Users{}, errors.New("adapter error")
-			},
-			request:   &pb.AddUserRequest{Name: "Abcd", IsAdmin: true},
-			wantError: true,
-			wantUser:  nil,
+			wantUser:  &pb.UserResponce{Id: 1, Name: "John", Email: "john@gmail.com", Mobile: "9435467231", IsAdmin: false, IsSuAdmin: false},
 		},
 		{
 			name: "Success",
-			mockFunc: func(user entities.Users) (entities.Users, error) {
-				return entities.Users{Id: 1, Name: user.Name, IsAdmin: user.IsAdmin}, nil
+			mockFunc: func(user entities.Clients) (entities.Clients, error) {
+				return entities.Clients{Id: 2, Name: user.Name, Email: user.Email, Mobile: user.Mobile}, nil
 			},
-			request:   &pb.AddUserRequest{Name: "Akshay", IsAdmin: true},
+			request:   &pb.SignupUserRequest{Name: "Akshay", Email: "akshay@gmail.com", Mobile: "9435467231", Password: "qw##w23Aw"},
 			wantError: false,
-			wantUser:  &pb.UserResponce{Id: 1, Name: "Akshay", IsAdmin: true},
+			wantUser:  &pb.UserResponce{Id: 2, Name: "Akshay", Email: "akshay@gmail.com", Mobile: "9435467231", IsAdmin: false, IsSuAdmin: false},
+		},
+		{
+			name: "Failure",
+			mockFunc: func(user entities.Clients) (entities.Clients, error) {
+				return entities.Clients{}, fmt.Errorf("here occures a error")
+			},
+			request:   &pb.SignupUserRequest{Name: "Akshay", Email: "akshay@gmail.com", Mobile: "9435467231", Password: "qw##w23Aw"},
+			wantError: true,
+			wantUser:  nil,
 		},
 	}
 
 	for _, tt := range tests {
 
-		adapter.EXPECT().Adduser(gomock.Any()).DoAndReturn(tt.mockFunc).AnyTimes().Times(1)
+		adapter.EXPECT().Signup(gomock.Any()).DoAndReturn(tt.mockFunc).AnyTimes().Times(1)
 		usrService := services.NewUserServiceServer(adapter)
 
-		user, err := usrService.AddUser(context.TODO(), tt.request)
+		user, err := usrService.SignupUser(context.TODO(), tt.request)
 		if tt.wantError {
 			fmt.Println("addUser fail")
 			assert.Error(t, err)
@@ -85,24 +84,24 @@ func TestGetUser(t *testing.T) {
 	adapter := mock_adapterinterfaces.NewMockAdapterInterface(ctrl)
 	tests := []struct {
 		name      string
-		mockFunc  func(id uint) (entities.Users, error)
+		mockFunc  func(id uint) (entities.Clients, error)
 		request   *pb.UserRequest
 		wantError bool
 		wantUser  *pb.UserResponce
 	}{
 		{
 			name: "Success",
-			mockFunc: func(id uint) (entities.Users, error) {
-				return entities.Users{Id: id, Name: "Akshay", IsAdmin: true}, nil
+			mockFunc: func(id uint) (entities.Clients, error) {
+				return entities.Clients{Id: id, Name: "Akshay", Email: "akshay@gmail.com", Mobile: "9345679876"}, nil
 			},
 			request:   &pb.UserRequest{Id: 1},
 			wantError: false,
-			wantUser:  &pb.UserResponce{Id: 1, Name: "Akshay", IsAdmin: true},
+			wantUser:  &pb.UserResponce{Id: 1, Name: "Akshay", Email: "akshay@gmail.com", Mobile: "9345679876"},
 		},
 		{
 			name: "Failure",
-			mockFunc: func(id uint) (entities.Users, error) {
-				return entities.Users{}, fmt.Errorf("this testCase is a failure")
+			mockFunc: func(id uint) (entities.Clients, error) {
+				return entities.Clients{}, fmt.Errorf("its a test case")
 			},
 			request:   &pb.UserRequest{Id: 100},
 			wantError: true,
@@ -110,12 +109,12 @@ func TestGetUser(t *testing.T) {
 		},
 		{
 			name: "Success",
-			mockFunc: func(id uint) (entities.Users, error) {
-				return entities.Users{Id: id, Name: "Frank", IsAdmin: false}, nil
+			mockFunc: func(id uint) (entities.Clients, error) {
+				return entities.Clients{Id: id, Name: "Frank", Email: "frank@gmail.com", Mobile: "97654345678"}, nil
 			},
 			request:   &pb.UserRequest{Id: 2},
 			wantError: false,
-			wantUser:  &pb.UserResponce{Id: 2, Name: "Frank", IsAdmin: false},
+			wantUser:  &pb.UserResponce{Id: 2, Name: "Frank", Email: "frank@gmail.com", Mobile: "97654345678"},
 		},
 	}
 
@@ -147,30 +146,30 @@ func TestGetAllUsersResponce(t *testing.T) {
 	tests := []struct {
 		name      string
 		request   *empty.Empty
-		mockfunc  func() ([]entities.Users, error)
+		mockfunc  func() ([]entities.Clients, error)
 		expected  *pb.AllUsersResponce
 		wantError bool
 	}{
 		{
 			name:    "Success",
 			request: &empty.Empty{},
-			mockfunc: func() ([]entities.Users, error) {
-				return []entities.Users{
-					{Id: 1, Name: "Akshay", IsAdmin: true},
-					{Id: 2, Name: "Frank", IsAdmin: false},
+			mockfunc: func() ([]entities.Clients, error) {
+				return []entities.Clients{
+					{Id: 1, Name: "Akshay", Email: "akshay@gmail.com", Mobile: "9765434567"},
+					{Id: 2, Name: "Frank", Email: "frank@gmail.com", Mobile: "987654567"},
 				}, nil
 			},
 			expected: &pb.AllUsersResponce{Users: []*pb.UserResponce{
-				{Id: 1, Name: "Akshay", IsAdmin: true},
-				{Id: 2, Name: "Frank", IsAdmin: false},
+				{Id: 1, Name: "Akshay", Email: "akshay@gmail.com", Mobile: "9765434567"},
+				{Id: 2, Name: "Frank", Email: "frank@gmail.com", Mobile: "987654567"},
 			}},
 			wantError: false,
 		},
 		{
 			name:    "Failure",
 			request: &empty.Empty{},
-			mockfunc: func() ([]entities.Users, error) {
-				return []entities.Users{}, fmt.Errorf("this is a failed case")
+			mockfunc: func() ([]entities.Clients, error) {
+				return []entities.Clients{}, fmt.Errorf("this is a failed case")
 			},
 			expected:  nil,
 			wantError: true,

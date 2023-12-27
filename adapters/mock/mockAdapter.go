@@ -34,26 +34,56 @@ func (m *MockAdapterInterface) EXPECT() *MockAdapterInterfaceMockRecorder {
 	return m.recorder
 }
 
-// Adduser mocks base method.
-func (m *MockAdapterInterface) Adduser(req entities.Users) (entities.Users, error) {
+// AddAdmin mocks base method.
+func (m *MockAdapterInterface) AddAdmin(req entities.Admins) (entities.Admins, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Adduser", req)
-	ret0, _ := ret[0].(entities.Users)
+	ret := m.ctrl.Call(m, "AddAdmin", req)
+	ret0, _ := ret[0].(entities.Admins)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Adduser indicates an expected call of Adduser.
-func (mr *MockAdapterInterfaceMockRecorder) Adduser(req interface{}) *gomock.Call {
+// AddAdmin indicates an expected call of AddAdmin.
+func (mr *MockAdapterInterfaceMockRecorder) AddAdmin(req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Adduser", reflect.TypeOf((*MockAdapterInterface)(nil).Adduser), req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddAdmin", reflect.TypeOf((*MockAdapterInterface)(nil).AddAdmin), req)
+}
+
+// GetAdmin mocks base method.
+func (m *MockAdapterInterface) GetAdmin(id uint) (entities.Admins, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAdmin", id)
+	ret0, _ := ret[0].(entities.Admins)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAdmin indicates an expected call of GetAdmin.
+func (mr *MockAdapterInterfaceMockRecorder) GetAdmin(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdmin", reflect.TypeOf((*MockAdapterInterface)(nil).GetAdmin), id)
+}
+
+// GetAllAdmins mocks base method.
+func (m *MockAdapterInterface) GetAllAdmins() ([]entities.Admins, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllAdmins")
+	ret0, _ := ret[0].([]entities.Admins)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllAdmins indicates an expected call of GetAllAdmins.
+func (mr *MockAdapterInterfaceMockRecorder) GetAllAdmins() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllAdmins", reflect.TypeOf((*MockAdapterInterface)(nil).GetAllAdmins))
 }
 
 // GetAllUsers mocks base method.
-func (m *MockAdapterInterface) GetAllUsers() ([]entities.Users, error) {
+func (m *MockAdapterInterface) GetAllUsers() ([]entities.Clients, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllUsers")
-	ret0, _ := ret[0].([]entities.Users)
+	ret0, _ := ret[0].([]entities.Clients)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -64,11 +94,41 @@ func (mr *MockAdapterInterfaceMockRecorder) GetAllUsers() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllUsers", reflect.TypeOf((*MockAdapterInterface)(nil).GetAllUsers))
 }
 
+// GetPassByEmail mocks base method.
+func (m *MockAdapterInterface) GetPassByEmail(email string, isAdmin, isSuAdmin bool) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPassByEmail", email, isAdmin, isSuAdmin)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPassByEmail indicates an expected call of GetPassByEmail.
+func (mr *MockAdapterInterfaceMockRecorder) GetPassByEmail(email, isAdmin, isSuAdmin interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPassByEmail", reflect.TypeOf((*MockAdapterInterface)(nil).GetPassByEmail), email, isAdmin, isSuAdmin)
+}
+
+// GetSuAdmin mocks base method.
+func (m *MockAdapterInterface) GetSuAdmin(id uint) (entities.SuAdmins, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSuAdmin", id)
+	ret0, _ := ret[0].(entities.SuAdmins)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSuAdmin indicates an expected call of GetSuAdmin.
+func (mr *MockAdapterInterfaceMockRecorder) GetSuAdmin(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSuAdmin", reflect.TypeOf((*MockAdapterInterface)(nil).GetSuAdmin), id)
+}
+
 // GetUser mocks base method.
-func (m *MockAdapterInterface) GetUser(id uint) (entities.Users, error) {
+func (m *MockAdapterInterface) GetUser(id uint) (entities.Clients, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", id)
-	ret0, _ := ret[0].(entities.Users)
+	ret0, _ := ret[0].(entities.Clients)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -77,4 +137,64 @@ func (m *MockAdapterInterface) GetUser(id uint) (entities.Users, error) {
 func (mr *MockAdapterInterfaceMockRecorder) GetUser(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockAdapterInterface)(nil).GetUser), id)
+}
+
+// LoginAdmin mocks base method.
+func (m *MockAdapterInterface) LoginAdmin(email, password string) (entities.Admins, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoginAdmin", email, password)
+	ret0, _ := ret[0].(entities.Admins)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoginAdmin indicates an expected call of LoginAdmin.
+func (mr *MockAdapterInterfaceMockRecorder) LoginAdmin(email, password interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoginAdmin", reflect.TypeOf((*MockAdapterInterface)(nil).LoginAdmin), email, password)
+}
+
+// LoginSuAdmin mocks base method.
+func (m *MockAdapterInterface) LoginSuAdmin(email, password string) (entities.SuAdmins, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoginSuAdmin", email, password)
+	ret0, _ := ret[0].(entities.SuAdmins)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoginSuAdmin indicates an expected call of LoginSuAdmin.
+func (mr *MockAdapterInterfaceMockRecorder) LoginSuAdmin(email, password interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoginSuAdmin", reflect.TypeOf((*MockAdapterInterface)(nil).LoginSuAdmin), email, password)
+}
+
+// LoginUser mocks base method.
+func (m *MockAdapterInterface) LoginUser(email, password string) (entities.Clients, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoginUser", email, password)
+	ret0, _ := ret[0].(entities.Clients)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoginUser indicates an expected call of LoginUser.
+func (mr *MockAdapterInterfaceMockRecorder) LoginUser(email, password interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoginUser", reflect.TypeOf((*MockAdapterInterface)(nil).LoginUser), email, password)
+}
+
+// Signup mocks base method.
+func (m *MockAdapterInterface) Signup(req entities.Clients) (entities.Clients, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Signup", req)
+	ret0, _ := ret[0].(entities.Clients)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Signup indicates an expected call of Signup.
+func (mr *MockAdapterInterfaceMockRecorder) Signup(req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Signup", reflect.TypeOf((*MockAdapterInterface)(nil).Signup), req)
 }

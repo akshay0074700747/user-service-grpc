@@ -32,32 +32,32 @@ func TestAddUserIntegration(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		request   *pb.AddUserRequest
+		request   *pb.SignupUserRequest
 		wantError bool
 		wantUser  *pb.UserResponce
 	}{
 		{
 			name:      "Success",
-			request:   &pb.AddUserRequest{Name: "Trevor", IsAdmin: false},
+			request:   &pb.SignupUserRequest{Name: "Trevor", Email: "trevor@gmail.com", Mobile: "97654567565", Password: "ee$gfdg12"},
 			wantError: false,
-			wantUser:  &pb.UserResponce{Id: 1, Name: "Trevor", IsAdmin: false},
+			wantUser:  &pb.UserResponce{Id: 1, Name: "Trevor", Email: "trevor@gmail.com", Mobile: "97654567565"},
 		},
 		{
 			name:      "Failure",
-			request:   &pb.AddUserRequest{},
+			request:   &pb.SignupUserRequest{},
 			wantError: true,
 			wantUser:  nil,
 		},
 		{
 			name:      "Success",
-			request:   &pb.AddUserRequest{Name: "Messi", IsAdmin: true},
+			request:   &pb.SignupUserRequest{Name: "Trevor", Email: "trevor@gmail.com", Mobile: "97654567565", Password: "ee$gfdg12"},
 			wantError: false,
-			wantUser:  &pb.UserResponce{Id: 2, Name: "Messi", IsAdmin: true},
+			wantUser:  &pb.UserResponce{Id: 2, Name: "Trevor", Email: "trevor@gmail.com", Mobile: "97654567565"},
 		},
 	}
 
 	for _, test := range tests {
-		responce, err := usrService.AddUser(context.TODO(), test.request)
+		responce, err := usrService.SignupUser(context.TODO(), test.request)
 		if test.wantError {
 			assert.Error(t, err)
 			assert.Nil(t, responce)
@@ -94,7 +94,7 @@ func TestGetUserIntegration(t *testing.T) {
 			name:      "Success",
 			request:   &pb.UserRequest{Id: 1},
 			wantError: false,
-			wantUser:  &pb.UserResponce{Id: 1, Name: "Trevor", IsAdmin: false},
+			wantUser:  &pb.UserResponce{Id: 1, Name: "Trevor", Email: "trevor@gmail.com", Mobile: "97654567565"},
 		},
 		{
 			name:      "Failure",
@@ -106,7 +106,7 @@ func TestGetUserIntegration(t *testing.T) {
 			name:      "Success",
 			request:   &pb.UserRequest{Id: 2},
 			wantError: false,
-			wantUser:  &pb.UserResponce{Id: 2, Name: "Messi", IsAdmin: true},
+			wantUser:  &pb.UserResponce{Id: 2, Name: "Trevor", Email: "trevor@gmail.com", Mobile: "97654567565"},
 		},
 	}
 
@@ -134,7 +134,7 @@ func TestGetAllUsersIntegration(t *testing.T) {
 	db, err := db.InitDB(addr)
 
 	defer func() {
-		db.Exec("drop table users")
+		db.Exec("drop table clients")
 	}()
 
 	if err != nil {
@@ -153,8 +153,8 @@ func TestGetAllUsersIntegration(t *testing.T) {
 			name:    "Success",
 			request: &empty.Empty{},
 			expected: &pb.AllUsersResponce{Users: []*pb.UserResponce{
-				{Id: 1, Name: "Trevor", IsAdmin: false},
-				{Id: 2, Name: "Messi", IsAdmin: true},
+				{Id: 1, Name: "Trevor", Email: "trevor@gmail.com", Mobile: "97654567565"},
+				{Id: 2, Name: "Trevor", Email: "trevor@gmail.com", Mobile: "97654567565"},
 			}},
 			wantError: false,
 		},
