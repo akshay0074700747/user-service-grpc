@@ -53,6 +53,7 @@ func (user *UserServiceServer) SignupUser(ctx context.Context, req *pb.SignupUse
 
 	userRes, err := user.Adapter.Signup(reqq)
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
 	return &pb.UserResponce{

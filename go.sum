@@ -8,6 +8,8 @@ github.com/akshay0074700747/proto-files-for-microservices v0.0.0-20231221073504-
 github.com/akshay0074700747/proto-files-for-microservices v0.0.0-20231221073504-9f9d46463dd2/go.mod h1:2FU2aQVDr5/DeGHYeEiHbj6O9IESietoTA+3jiYeLQ0=
 github.com/akshay0074700747/proto-files-for-microservices v0.0.0-20231226084919-d5a5f8433602 h1:xVdHhpOjPh4AOdjvPRDdW0lylPzWy2tjdJ2QLzGP9YQ=
 github.com/akshay0074700747/proto-files-for-microservices v0.0.0-20231226084919-d5a5f8433602/go.mod h1:2FU2aQVDr5/DeGHYeEiHbj6O9IESietoTA+3jiYeLQ0=
+github.com/akshay0074700747/proto-files-for-microservices v0.0.0-20240101143744-99d1cae2eb85 h1:n+XX0V5OYbWawcgTYEGx1aRoS9zCRpX6SOAOOh7N73s=
+github.com/akshay0074700747/proto-files-for-microservices v0.0.0-20240101143744-99d1cae2eb85/go.mod h1:2FU2aQVDr5/DeGHYeEiHbj6O9IESietoTA+3jiYeLQ0=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

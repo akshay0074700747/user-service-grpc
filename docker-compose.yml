@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  user-service:
+    build: .
+    ports:
+      - '50002:50002'
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=ithunjanthanne
+      - POSTGRES_DB=user_service
+
+  db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=ithunjanthanne
+      - POSTGRES_DB=user_service
+        

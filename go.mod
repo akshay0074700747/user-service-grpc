@@ -22,7 +22,7 @@ require (
 )
 
 require (
-	github.com/akshay0074700747/proto-files-for-microservices v0.0.0-20231226084919-d5a5f8433602
+	github.com/akshay0074700747/proto-files-for-microservices v0.0.0-20240101143744-99d1cae2eb85
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/joho/godotenv v1.5.1
 	golang.org/x/net v0.19.0 // indirect
